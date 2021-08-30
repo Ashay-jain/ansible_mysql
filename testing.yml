@@ -1,0 +1,11 @@
+- hosts: all
+  user: ubuntu
+  become: yes
+  connection: ssh
+  tasks:
+          #   - name: copying mysqld.cnf file to server mysql.cnf
+          #    copy:
+          # src: /home/rounak/ansible/mysql/mysqld.cnf
+          # dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+    - name: restart datadog
+      service: name=mysql.service state=restarted
