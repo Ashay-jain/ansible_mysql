@@ -78,7 +78,7 @@
 
     - name: copying mysqld.cnf file to server mysql.cnf
       copy:
-        src: /home/rounak/ansible/mysql/mysqld.cnf
+        src: mysqld.cnf
         dest: /etc/mysql/mysql.conf.d/mysqld.cnf
    
         
