@@ -50,30 +50,30 @@
     - name: Create root user root password 
       mysql_user:
         name: "root"
-        password: "UzA9WHsmVMm"
+        password: "rootpass"
         priv: "*.*:ALL,GRANT"
         append_privs: yes
         state: present
       no_log: True
 
     - name: create a new database 
-      mysql_db: name=mcba_qa state=present login_user=root login_password=UzA9WHsmVMm
+      mysql_db: name=qa state=present login_user=root login_password=UzA9WHsmVMm
 
     - name: Creating int mysql user
       mysql_user:
-        login_password: "UzA9WHsmVMm"  #mysql root password here
+        login_password: "rootpass"  #mysql root password here
         name: "int_user"
-        password: "zA9WHsmVMm321"
-        priv:  mcba_qa.*:ALL
+        password: "intpass"
+        priv:  qa.*:ALL
         host: "localhost"
 
     
     - name: Creating mysql  ext user 
       mysql_user: 
-        login_password: "UzA9WHsmVMm"  #mysql root password here
+        login_password: "rootpass"  #mysql root password here
         name: "ext_user"
-        password: "extUzA9WHsmVMm" 
-        priv:  mcba_qa.*:ALL
+        password: "extpass" 
+        priv:  qa.*:ALL
         host: "%"
 
     - name: copying mysqld.cnf file to server mysql.cnf
