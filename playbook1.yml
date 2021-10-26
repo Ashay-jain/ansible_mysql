@@ -57,14 +57,14 @@
       no_log: True
 
     - name: create a new database 
-      mysql_db: name=mcba_qa state=present login_user=root login_password=UzA9WHsmVMm
+      mysql_db: name=qa state=present login_user=root login_password=UzA9WHsmVMm
 
     - name: Creating int mysql user
       mysql_user:
         login_password: "rootpassword"  #mysql root password here
         name: "int_user"
         password: "intpass" #int pass
-        priv:  mcb.*:ALL
+        priv:  qa.*:ALL
         host: "localhost"
 
     
@@ -73,7 +73,7 @@
         login_password: "rootpass"  #mysql root password here
         name: "ext_user"
         password: "extpass" #ext user password
-        priv:  mcba_qa.*:ALL
+        priv:  qa.*:ALL
         host: "%"
 
     - name: copying mysqld.cnf file to server mysql.cnf
