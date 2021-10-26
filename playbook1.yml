@@ -50,7 +50,7 @@
     - name: Create root user root password 
       mysql_user:
         name: "root"
-        password: "UzA9WHsmVMm"
+        password: "rootpass"
         priv: "*.*:ALL,GRANT"
         append_privs: yes
         state: present
@@ -61,18 +61,18 @@
 
     - name: Creating int mysql user
       mysql_user:
-        login_password: "UzA9WHsmVMm"  #mysql root password here
+        login_password: "rootpassword"  #mysql root password here
         name: "int_user"
-        password: "zA9WHsmVMm321"
+        password: "intpass" #int pass
         priv:  mcb.*:ALL
         host: "localhost"
 
     
     - name: Creating mysql  ext user 
       mysql_user: 
-        login_password: "UzA9WHsmVMm"  #mysql root password here
+        login_password: "rootpass"  #mysql root password here
         name: "ext_user"
-        password: "extUzA9WHsmVMm" 
+        password: "extpass" #ext user password
         priv:  mcba_qa.*:ALL
         host: "%"
 
