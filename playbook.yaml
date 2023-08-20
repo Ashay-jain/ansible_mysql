@@ -1,0 +1,111 @@
+---
+- name: Install and configure MySQL
+  hosts: all
+  become: yes
+  vars:
+    mysql_root_password: password
+    mysql_user: int
+    mysql_password: int
+    dbname: test
+    mysql_connect_ip: 0.0.0.0
+  tasks:
+    - name: Update apt cache (for Ubuntu) or yum cache (for CentOS)
+      apt:
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Install MySQL packages
+      package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - mysql-server
+        - mysql-client
+        - python3-dev
+        - libmysqlclient-dev
+        - python3-mysqldb
+      when: ansible_os_family == "Debian"
+
+    - name: Install MySQL packages
+      package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - mariadb-server
+        - mariadb
+      when: ansible_os_family == "RedHat"
+
+    - name: Start MySQL service
+      service:
+        name: mysql
+        state: started
+        enabled: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Start MySQL service
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+      when: ansible_os_family == "RedHat"
+
+    - name: Secure MySQL installation
+      command: mysql_secure_installation
+      args:
+        stdin: |
+          N
+          {{ mysql_root_password }}
+          {{ mysql_root_password }}
+          Y
+          Y
+          Y
+          Y
+      when: ansible_os_family == "Debian" or ansible_os_family == "RedHat" and mysql_root_user.stdout == ""
+    
+    - name: Create new databases "{{ dbname }}"
+      community.mysql.mysql_db:
+        name: "{{ dbname }}"
+        state: present
+
+    - name: Create MySQL user
+      mysql_user:
+        name: "{{ mysql_user }}"
+        password: "{{ mysql_password }}"
+        host: "%"
+        state: present
+
+    - name: Grant privileges on database to user
+      mysql_user:
+        name: "{{ mysql_user }}"
+        priv: "{{ dbname }}.*:ALL"
+        state: present
+
+    - name: Copy MySQL config file
+      template:
+        src: mysql.conf.j2
+        dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+      when: ansible_os_family == "Debian"
+      notify: Restart MySQL
+
+  handlers:
+    - name: Restart MySQL
+      service:
+        name: mysql
+        state: restarted
+      when: ansible_os_family == "Debian"
+
+    - name: Restart MySQL
+      service:
+        name: mariadb
+        state: restarted
+      when: ansible_os_family == "RedHat"
+
+
+
+
+
+
+
+
+
+
